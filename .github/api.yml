@@ -1,0 +1,87 @@
+name: API test and deploy 
+on: 
+  push:
+    paths:
+      - 'services/tasks_api/**'
+      - '.github/workflows/api.yml'
+
+jobs:
+  code-quality:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.9]
+        poetry-version: [1.3.2]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: services/tasks_api
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+      
+Part 2
+Part 3
+Search course
+Home
+Serverless Apps with FastAPI, DynamoDB, and Vue
+Part 1
+Tests and Code Quality
+
+Tests and Code Quality
+Part 1, Chapter 5
+
+ 
+
+
+Code Quality Checks
+Moving along, let's add our code quality checks to the CI/CD pipeline. First, move to your project and add a new folder ".github/workflows" for storing workflows for GitHub Actions:
+
+$ cd tasks
+$ mkdir .github
+$ cd .github
+$ mkdir workflows
+$ cd workflows
+Add a new file called api.yml to "workflows":
+
+name: API Test and deploy
+on:
+  push:
+    paths:
+      - 'services/tasks_api/**'
+      - '.github/workflows/api.yml'
+
+jobs:
+  code-quality:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.9]
+        poetry-version: [1.3.2]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: services/tasks_api
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
+      - name: Install dependencies
+        run: poetry install --no-root
+      - name: run ruff
+        run: poetry run ruff .
+      - name: Run bandit
+        run: poetry run bandit .
