@@ -106,4 +106,4 @@ jobs:
         run: echo "Authentication successful."
 
       - name: Deploy
-        run: sls deploy --stage development --verbose
+        run: serverless deploy --stage development --verbose
