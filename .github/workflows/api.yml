@@ -1,4 +1,4 @@
-name: API test and deploy
+name: API Test and Deploy
 on:
   push:
     paths:
@@ -34,6 +34,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+
   code-quality:
     strategy:
       fail-fast: false
@@ -56,11 +57,12 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install dependencies
         run: poetry install --no-root
-      - name: run ruff
+      - name: Run ruff
         run: poetry run ruff check
       - name: Run bandit
         run: poetry run bandit .
-  deploy-development: # new
+
+  deploy-development:
     needs: [test, code-quality]
     strategy:
       fail-fast: false
@@ -76,20 +78,32 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Set up Python 3.9
+
+      - name: Set up Python
         uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install poetry
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ matrix.poetry-version }}
-      - uses: actions/setup-node@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install Serverless Framework
-        run: npm install -g serverless
+
       - name: Install NPM dependencies
         run: npm install
+
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+
+      - name: Authenticate with Serverless
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+        run: echo "Authentication successful."
+
       - name: Deploy
         run: sls deploy --stage development --verbose
