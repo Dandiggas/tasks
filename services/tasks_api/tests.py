@@ -28,13 +28,10 @@ def test_health_check(client):
     assert response.json() == {"message": "OK"}
 
 
-my_config = Config(region_name="us-east-2")
-
-
 @pytest.fixture
 def dynamodb_table():
     with mock_aws():
-        client = boto3.client("dynamodb", my_config)
+        client = boto3.client("dynamodb")
         table_name = "test-table"
         client.create_table(
             AttributeDefinitions=[

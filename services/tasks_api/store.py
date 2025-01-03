@@ -76,8 +76,8 @@ class TaskStore:
 
         return tasks
 
-    def list_open(self, owner):
-        return self._list_by_status(owner, TaskStatus.OPEN)
+    # def list_open(self, owner):
+    #     return self._list_by_status(owner, TaskStatus.OPEN)
 
     def list_closed(self, owner):
         return self._list_by_status(owner, TaskStatus.CLOSED)
