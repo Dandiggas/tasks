@@ -2,7 +2,6 @@ import uuid
 
 import boto3
 import pytest
-from botocore.config import Config
 from fastapi import status
 from moto import mock_aws
 from starlette.testclient import TestClient
